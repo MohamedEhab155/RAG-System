@@ -3,7 +3,7 @@ from Helper.config import get_settings, Settings
 from Contoroller.DataContoroller import DataContoroller
 from Contoroller import ProjectContoroller 
 import os 
-from fastapi import UploadFile , status 
+from fastapi import UploadFile , status , Request
 from fastapi.responses import JSONResponse 
 import aiofiles
 from Models import ResponseSignal
@@ -12,13 +12,17 @@ from Routers.Schema.data import ProcessRequest
 from Contoroller.ProcessContoroller import processContoroller
 import logging
 logger=logging.getLogger("uvicorn_error")
-
+from Models.ProjectModel import ProjectModel
 data_controller = DataContoroller()
 
 data_router = APIRouter(prefix="/app/v2/data")
 @data_router.post("/upload/{project_id}")
-async def upload_data(project_id: str, file: UploadFile, app_setting: Settings = Depends(get_settings)):
+async def upload_data(request: Request,project_id: str, file: UploadFile, app_setting: Settings = Depends(get_settings)):
     data_controller = DataContoroller()
+
+    project_model=ProjectModel(request.app.db_client)
+    project = await project_model.get_project_or_create_one(
+        project_id=project_id ) 
 
     vaildate , msg = data_controller.vaildate(file)
 
@@ -56,7 +60,11 @@ async def upload_data(project_id: str, file: UploadFile, app_setting: Settings =
             content={
                 "signal": ResponseSignal.FILE_UPLOAD_SUCCESS.value
                 ,
-                "file_id":file_id} 
+                "file_id":file_id,
+                
+                "project_id":str(project._id)
+                  
+                  } 
                   )
 
 @data_router.post("/process/{project_id}")

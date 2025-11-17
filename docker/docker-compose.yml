@@ -1,14 +1,18 @@
+version: "3.9"
+
 services:
   mongodb:
-    image: mongo:7.0-rc-jammy
+    image: mongo:7.0   
     container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - "./mongodb:/data/db"
+      - /home/$USER/mongo-data:/data/db  
     networks:
       - backend
     restart: always
 
+
 networks:
   backend:
+    driver: bridge
