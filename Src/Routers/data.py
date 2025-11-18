@@ -13,6 +13,8 @@ from Contoroller.ProcessContoroller import processContoroller
 import logging
 logger=logging.getLogger("uvicorn_error")
 from Models.ProjectModel import ProjectModel
+from Models.ChunkModel import ChunkModel 
+from  Models.db_Schema.ChunkDtata import ChunkData
 data_controller = DataContoroller()
 
 data_router = APIRouter(prefix="/app/v2/data")
@@ -68,11 +70,18 @@ async def upload_data(request: Request,project_id: str, file: UploadFile, app_se
                   )
 
 @data_router.post("/process/{project_id}")
-async def process(project_id,process_request:ProcessRequest):
+async def process(project_id,process_request:ProcessRequest,request:Request):
      
     chunk_size=process_request.chunk_size
     overlap_size=process_request.overlap_size
     file_id=process_request.file_id
+    do_reset=process_request.do_reset
+
+
+    project_model=ProjectModel(request.app.db_client)
+    project = await project_model.get_project_or_create_one(
+    project_id=project_id ) 
+    
 
     processing_file=processContoroller(project_id=project_id)
 
@@ -87,5 +96,29 @@ async def process(project_id,process_request:ProcessRequest):
                 "signal": ResponseSignal.PROCESSING_FAILED.value
             }
         )
+    
 
-    return file_chunks 
+    file_chunks_records = [
+        ChunkData(
+            chunk_text=chunk.page_content,
+            chunk_meta_data=chunk.metadata,
+            chunk_order=i+1,
+            chunk_project_id=project.id,
+        )
+        for i, chunk in enumerate(file_chunks)
+    ]
+
+    chunk_model=ChunkModel(request.app.db_client)
+    if do_reset == 1:
+        _ = await chunk_model.delete_chunks_by_project_id(
+            project_id=project.id
+        )
+
+    no_records = await chunk_model.insert_many_chunks(chunks=file_chunks_records)
+
+    return JSONResponse(
+        content={
+            "signal": ResponseSignal.PROCESSING_SUCCESS.value,
+            "inserted_chunks": no_records
+        }
+    )

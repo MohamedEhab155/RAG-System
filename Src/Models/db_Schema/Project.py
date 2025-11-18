@@ -4,7 +4,7 @@ from typing import Optional
 from bson import ObjectId
 
 class Project(BaseModel): 
-    _id :Optional[ObjectId]
+    id: Optional[ObjectId] = Field(None, alias="_id")
 
     project_id :str =Field(...,min_length=1) 
 
@@ -15,6 +15,8 @@ class Project(BaseModel):
         return value
 
 
-    class config:
-        arbitrary_types_allowed=True
+    model_config = {
+     "arbitrary_types_allowed": True
+}
+
         
