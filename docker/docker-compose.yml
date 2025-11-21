@@ -9,8 +9,8 @@ services:
     volumes:
       - /home/$USER/mongo-data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: env.MONGO_INITDB_ROOT_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD:  env.MONGO_INITDB_ROOT_PASSWORD
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     networks:
       - backend
     restart: always
