@@ -22,7 +22,7 @@ class Project(BaseModel):
 
     @classmethod
     def get_indexes(cls):
-        return {
+        return[{
 
             "key": [
 
@@ -34,5 +34,5 @@ class Project(BaseModel):
             "unique": True 
         }
 
-
+        ]
         

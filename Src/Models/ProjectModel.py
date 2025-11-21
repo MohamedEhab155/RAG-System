@@ -26,7 +26,7 @@ class ProjectModel(BaseDataModel):
 
              for index in indexes:
                 await self.collection.create_index(
-                    key=index['key'],
+                    index['key'],
                     name=index['name'],
                     unique=index['unique']
                 )

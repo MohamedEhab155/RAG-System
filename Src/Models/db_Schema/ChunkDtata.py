@@ -18,7 +18,7 @@ class ChunkData(BaseModel):
     
     @classmethod
     def get_indexes(cls):
-        return {
+        return [{
 
             "key": [
 
@@ -29,4 +29,4 @@ class ChunkData(BaseModel):
 
             "unique": False 
         }
-
+        ]
