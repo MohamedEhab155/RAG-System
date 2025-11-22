@@ -17,7 +17,8 @@ from Models.ChunkModel import ChunkModel
 from  Models.db_Schema.ChunkDtata import ChunkData
 from Models.db_Schema.Assets import  Asset
 from Models.AssetsModel import AssetModel
-from Models.Enums.AssetsType import AssetTypeEnum
+from Models.Enums.AssetsType import AssetsType
+
 data_controller = DataContoroller()
 
 data_router = APIRouter(prefix="/app/v2/data")
@@ -68,7 +69,7 @@ async def upload_data(request: Request,project_id: str, file: UploadFile, app_se
 
     asset_resource = Asset(
         asset_project_id=project.id,
-        asset_type=AssetTypeEnum.FILE.value,
+        asset_type=AssetsType.FILE.value,
         asset_name=file_id,
         asset_size=os.path.getsize(file_path)
     )
