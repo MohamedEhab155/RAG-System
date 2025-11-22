@@ -16,7 +16,8 @@ from Models.ProjectModel import ProjectModel
 from Models.ChunkModel import ChunkModel 
 from  Models.db_Schema.ChunkDtata import ChunkData
 from Models.db_Schema.Assets import  Asset
-from Models.Assets
+from Models.AssetsModel import AssetModel
+from Models.Enums.AssetsType import AssetTypeEnum
 data_controller = DataContoroller()
 
 data_router = APIRouter(prefix="/app/v2/data")
@@ -60,16 +61,26 @@ async def upload_data(request: Request,project_id: str, file: UploadFile, app_se
                 "signal": ResponseSignal.FILE_UPLOAD_FAILED.value
             }
         )
+   # store the assets into the database
+    asset_model = await AssetModel.create_instance(
+        db_client=request.app.db_client
+    )
+
+    asset_resource = Asset(
+        asset_project_id=project.id,
+        asset_type=AssetTypeEnum.FILE.value,
+        asset_name=file_id,
+        asset_size=os.path.getsize(file_path)
+    )
+
+    asset_record = await asset_model.create_asset(asset=asset_resource)
+
     return JSONResponse(
             content={
-                "signal": ResponseSignal.FILE_UPLOAD_SUCCESS.value
-                ,
-                "file_id":file_id,
-                
-                "project_id":str(project.id)
-                  
-                  } 
-                  )
+                "signal": ResponseSignal.FILE_UPLOAD_SUCCESS.value,
+                "file_id": str(asset_record.id),
+            }
+        )
 
 @data_router.post("/process/{project_id}")
 async def process(project_id,process_request:ProcessRequest,request:Request):
