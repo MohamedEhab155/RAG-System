@@ -15,6 +15,8 @@ logger=logging.getLogger("uvicorn_error")
 from Models.ProjectModel import ProjectModel
 from Models.ChunkModel import ChunkModel 
 from  Models.db_Schema.ChunkDtata import ChunkData
+from Models.db_Schema.Assets import  Asset
+from Models.Assets
 data_controller = DataContoroller()
 
 data_router = APIRouter(prefix="/app/v2/data")
