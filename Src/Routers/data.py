@@ -91,48 +91,89 @@ async def process(project_id,process_request:ProcessRequest,request:Request):
     file_id=process_request.file_id
     do_reset=process_request.do_reset
 
-
     project_model=await ProjectModel.create_instance(request.app.db_client)
     project = await project_model.get_project_or_create_one(
     project_id=project_id ) 
-    
-
-    processing_file=processContoroller(project_id=project_id)
-
-    file_content=processing_file.get_file_content(file_id=process_request.file_id)
-
-    file_chunks =processing_file.process_file_content(file_content,chunk_size,overlap_size,file_id) 
-
-    if file_chunks is None or len(file_chunks) == 0:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "signal": ResponseSignal.PROCESSING_FAILED.value
-            }
-        )
-    
-
-    file_chunks_records = [
-        ChunkData(
-            chunk_text=chunk.page_content,
-            chunk_meta_data=chunk.metadata,
-            chunk_order=i+1,
-            chunk_project_id=project.id,
-        )
-        for i, chunk in enumerate(file_chunks)
-    ]
 
     chunk_model=await ChunkModel.create_instance(request.app.db_client)
     if do_reset == 1:
-        _ = await chunk_model.delete_chunks_by_project_id(
-            project_id=project.id
+            _ = await chunk_model.delete_chunks_by_project_id(
+                project_id=project.id
+            )
+
+    asset_model = await AssetModel.create_instance(
+        db_client=request.app.db_client
+    )
+    
+    project_files_ids = {}
+    if process_request.file_id:
+        asset_record = await asset_model.get_asset_record(
+            asset_project_id=project.id,
+            asset_name=process_request.file_id
         )
 
-    no_records = await chunk_model.insert_many_chunks(chunks=file_chunks_records)
+        if asset_record is None:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={
+                    "signal": ResponseSignal.FILE_ID_ERROR.value,
+                }
+            )
 
-    return JSONResponse(
-        content={
-            "signal": ResponseSignal.PROCESSING_SUCCESS.value,
-            "inserted_chunks": no_records
+        project_files_ids = {
+            asset_record.id: asset_record.asset_name
         }
-    )
+    
+    else: 
+   
+        project_files=await asset_model.get_all_project_assets(project.id,AssetsType.FILE.value)
+
+        project_files_ids={
+             record.id:record.asset_name
+             for record in project_files
+        }
+
+    processing_file=processContoroller(project_id=project_id)
+
+    no_records=0
+    files_processing=0
+    for asset_id,file_id in project_files_ids.items():
+        file_content=processing_file.get_file_content(file_id=file_id)
+        if file_content is None:
+            logger.error(f"Error while processing file: {file_id}")
+            continue
+
+        file_chunks =processing_file.process_file_content(file_content,chunk_size,overlap_size,file_id) 
+
+        if file_chunks is None or len(file_chunks) == 0:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={
+                    "signal": ResponseSignal.PROCESSING_FAILED.value
+                }
+            )
+        
+
+        file_chunks_records = [
+            ChunkData(
+                chunk_text=chunk.page_content,
+                chunk_meta_data=chunk.metadata,
+                chunk_order=i+1,
+                chunk_project_id=project.id,
+                chunk_asset_id=asset_id
+            )
+            for i, chunk in enumerate(file_chunks)
+        ]
+
+        
+        
+
+        no_records += await chunk_model.insert_many_chunks(chunks=file_chunks_records)
+        files_processing+=1
+    return JSONResponse(
+            content={
+                "signal": ResponseSignal.PROCESSING_SUCCESS.value,
+                "inserted_chunks": no_records,
+                "files_processing":files_processing
+            }
+        )
