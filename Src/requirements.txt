@@ -11,5 +11,6 @@ motor ==  3.7.1
 langchain-text-splitters == 1.0.0
 
 openai== 2.8.1
-
 cohere == 5.20.0
+
+qdrant-client == 1.16.1
