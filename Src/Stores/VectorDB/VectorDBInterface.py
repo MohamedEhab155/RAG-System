@@ -39,5 +39,6 @@ class VectorDBInterface(ABC):
     @abstractmethod
     def search_by_vector(self, collection_name: str, vector: list, limit: int):
         pass
-    
-    
+    @abstractmethod
+    def get_collection_info(self, collection_name: str) -> dict:
+        return self.client.get_collection(collection_name=collection_name)
