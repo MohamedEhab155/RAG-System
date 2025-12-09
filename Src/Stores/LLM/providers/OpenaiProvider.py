@@ -1,7 +1,7 @@
-from Stores.LLmsInterface import  LLmsInterface 
+from Stores.LLM.LLmsInterface import LLmsInterface 
 from openai import OpenAI 
 import logging
-from ..LLMEnums import OpenAIEnums
+from ..LLMSEnums import LLMEnums
 class OpenaiProvider(LLmsInterface): 
 
     def __init__(self, api_key: str, api_url: str=None,
@@ -23,7 +23,7 @@ class OpenaiProvider(LLmsInterface):
         
         self.client=OpenAI(
             api_key=self.api_key,
-            api_url=self.api_url
+          
         )
 
         self.logger=logging.getLogger(__name__)

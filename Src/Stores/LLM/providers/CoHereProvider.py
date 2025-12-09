@@ -1,8 +1,8 @@
-from Stores.LLmsInterface import  LLmsInterface 
-from cohere import Cohere
+from Stores.LLM.LLmsInterface import LLmsInterface 
+import cohere
 
 import logging
-from ..LLMEnums import cohereEnums , DocumentTypeEnum
+from ..LLMSEnums import CoHereEnums,DocumentTypeEnum
 class CoHereProvider(LLmsInterface): 
 
     def __init__(self, api_key: str,
@@ -21,9 +21,8 @@ class CoHereProvider(LLmsInterface):
         self.embedding_model_id = None
         self.embedding_size = None
         
-        self.client=Cohere(
-            api_key=self.api_key,
-        
+        self.client=cohere.Client(
+            api_key=self.api_key 
         )
 
         self.logger=logging.getLogger(__name__)
@@ -39,6 +38,7 @@ class CoHereProvider(LLmsInterface):
 
     def process_text(self,text):
         return text[:self.default_input_max_characters].strip()
+
 
     def generate_text(self, prompt: str, messages: list=None, max_output_tokens: int=None,
                             temperature: float = None):
@@ -56,7 +56,7 @@ class CoHereProvider(LLmsInterface):
         max_output_tokens = max_output_tokens if max_output_tokens else self.default_generation_max_output_tokens
         temperature = temperature if temperature else self.default_generation_temperature 
 
-        messages.append(self.construct_prompt(prompt=prompt, role=cohereEnums.USER.value))
+        messages.append(self.construct_prompt(prompt=prompt, role=CoHereEnums.USER.value))
 
         response = self.client.chat(
             model=self.generation_model_id,
@@ -73,31 +73,24 @@ class CoHereProvider(LLmsInterface):
         return response.message.content[0].text
         
 
-
-
-
-        
-        
   
     def embed_text(self, text: str, document_type: str = None):
         if not self.client : 
             self.logger.error("Cohere client was not set")
             return None 
-        if not self.embedding_model_id:
             self.logger.error("Embedding model for Cohere was not set")
             return None
         
         model=self.embedding_model_id 
 
-        input_type=cohereEnums.DOCUMENT.value 
+        input_type=CoHereEnums.DOCUMENT.value 
         if document_type == DocumentTypeEnum.QUERY.value:
-            input_type=cohereEnums.QUERY.value
+            input_type=CoHereEnums.QUERY.value
 
         res = self.client.embed(
-        texts=self.process_text(text),
+        texts=[self.process_text(text)],
         model=model,
         input_type=input_type,
-        output_dimension=1024,
         embedding_types=["float"],
     )
         if not res or not res.embeddings or not res.embeddings.float :
