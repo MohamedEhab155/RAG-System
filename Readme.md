@@ -33,3 +33,8 @@ $ cp .env.example .env
 ```
 
 Set your environment variables in the `.env` file. Like `GROQ_API_KEY` value.
+
+
+## POSTMAN Collection
+
+Download the POSTMAN collection from [/assets\first.postman_collection.json](/assets\first.postman_collection.json)

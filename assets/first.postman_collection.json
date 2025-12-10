@@ -1,0 +1,74 @@
+{
+	"info": {
+		"_postman_id": "210cac0f-ec2e-4258-8d67-98b05ef1a54a",
+		"name": "first",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49792345",
+		"_collection_link": "https://ma0587580-2946299.postman.co/workspace/Mohamed-Ehab's-Workspace~8d3d6b4f-e76d-46c3-82b2-a83a2d4c0167/collection/49792345-210cac0f-ec2e-4258-8d67-98b05ef1a54a?action=share&source=collection_link&creator=49792345"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "welcome",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{new api }}/welcome",
+					"host": [
+						"{{new api }}"
+					],
+					"path": [
+						"welcome"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api",
+			"value": ""
+		},
+		{
+			"key": "new api ",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
