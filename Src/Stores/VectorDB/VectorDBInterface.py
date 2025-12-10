@@ -25,16 +25,20 @@ class VectorDBInterface(ABC):
         pass
 
     @abstractmethod
-    def insert_one(self, collection_name: str, embedding: list, metadata: dict):
+    def insert_one(self, collection_name: str, text: list,vector:list, metadata: dict,record_id:int):
         pass
 
 
     @abstractmethod
-    def insert_many(self, collection_name: str, embeddings: list, metadatas: list,batch_size: int = 50):
+    def insert_many(self, collection_name: str, texts: list,vectors:list, metadatas: list,record_id:int,batch_size: int = 50):
+        pass
+
+    def is_collection_existed(self, collection_name: str) -> bool:
         pass
 
     @abstractmethod
     def search_by_vector(self, collection_name: str, vector: list, limit: int):
         pass
-    
-    
+    @abstractmethod
+    def get_collection_info(self, collection_name: str) -> dict:
+        return self.client.get_collection(collection_name=collection_name)
