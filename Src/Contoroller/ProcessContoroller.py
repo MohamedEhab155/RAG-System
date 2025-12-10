@@ -20,6 +20,10 @@ class processContoroller (BaseContoroller):
         file_ext=self.get_file_extension(file_id=file_id)
         file_path=os.path.join(self.path_file,file_id)
 
+        if not os.path.exists(file_path):
+            return None
+
+
         if file_ext ==ProcessingEnum.TXT.value :
              return TextLoader(file_path, encoding="utf-8")
         
@@ -31,8 +35,10 @@ class processContoroller (BaseContoroller):
     def get_file_content (self,file_id): 
 
         file_content=self.get_file_load(file_id=file_id)
-
-        return file_content.load()
+        
+        if file_content :
+            return file_content.load()
+        return None 
      
     def process_file_content(self,file_content:list ,chunk_size,chunk_overlap,file_id):
 

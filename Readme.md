@@ -32,6 +32,22 @@ $ pip install -r requirements.txt
 $ cp .env.example .env
 ```
 
+## Run Docker Compose Services
+
+```bash
+$ cd docker
+$ cp .env.example .env
+```
+
+- update `.env` with your credentials
+
+
+
+```bash
+$ cd docker
+$ sudo docker compose up -d
+```
+
 Set your environment variables in the `.env` file. Like `GROQ_API_KEY` value.
 ## Run the FastAPI server
 
