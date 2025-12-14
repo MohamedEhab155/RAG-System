@@ -5,12 +5,13 @@ from typing import List
 from Stores.LLM.LLMSEnums import DocumentTypeEnum
 import json
 class NLPContoroller(BaseContoroller):
-    def __init__(self,generation_client,embedding_client,vectordb_client):
+    def __init__(self,generation_client,embedding_client,vectordb_client,TempleteParser):
         super().__init__()
 
         self.generation_client=generation_client 
         self.embedding_client=embedding_client
         self.vectordb_client=vectordb_client 
+        self.TempleteParser=TempleteParser
     
     def collection_name(self,project_id):
         return f"collection_{project_id}".strip()
@@ -80,5 +81,47 @@ class NLPContoroller(BaseContoroller):
         )
 
 
+    def answer_rag_question (self,project,query,limit:int=5):
 
-       
+        answer, full_prompt, chat_history = None, None, None
+
+        results=self.search_vector_db_collection(project=project,text=query)
+        documents = [
+            {
+                "data": result["text"]
+            }
+            for result in results
+        ]
+
+
+        print ("retrieved_documents:",documents)
+
+
+        if not documents or len(documents)==0:
+            return None 
+        
+        system_prompt=self.TempleteParser.get(group="rag",key="system_prompt")
+
+
+      #  documents = "\n".join([
+       ##            "doc_num": idx + 1,
+           #         "chunk_text": doc["text"],
+         ##   })
+           # for idx, doc in enumerate(retrieved_documents)
+        #])
+
+
+        prompt=query
+        footer_prompt = self.TempleteParser.get("rag", "footer_prompt")
+
+        full_prompt = prompt + "\n\n" + footer_prompt
+
+        # step4: Retrieve the Answer
+        answer = self.generation_client.generate_text(
+             prompt=full_prompt,
+             system_message=system_prompt,
+             documents=documents
+           
+        )
+
+        return answer, full_prompt, chat_history

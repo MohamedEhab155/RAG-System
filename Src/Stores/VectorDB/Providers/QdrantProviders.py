@@ -2,7 +2,7 @@ from qdrant_client import QdrantClient, models
 import logging
 from Stores.VectorDB.VectorDBInterface import VectorDBInterface
 from ..VectorDBEnums import DistanceMethodEnums
-
+from Models.db_Schema.ChunkDtata import RetrievedDocument
 
 class QdrantProviders(VectorDBInterface):
     def __init__(self, distance_method, db_path):
@@ -107,12 +107,22 @@ class QdrantProviders(VectorDBInterface):
         return True
 
     def search_by_vector(self, collection_name: str, vector: list, limit: int):
-        return self.client.query_points(
+        results= self.client.query_points(
             collection_name=collection_name,
             query=vector,
             limit=limit,
             with_payload=True
         )
+            
 
+      
+
+        return [
+            RetrievedDocument(
+                score=point.score,       
+                text=point.payload["text"]  
+            )
+            for point in results.points     
+        ]
     def get_collection_info(self, collection_name: str):
         return self.client.get_collection(collection_name=collection_name)
