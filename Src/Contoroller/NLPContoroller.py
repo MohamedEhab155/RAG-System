@@ -112,8 +112,9 @@ class NLPContoroller(BaseContoroller):
 
 
         prompt=query
-        footer_prompt = self.TempleteParser.get("rag", "footer_prompt")
-
+        footer_prompt = self.TempleteParser.get("rag", "footer_prompt", {
+            "query": query
+        })
         full_prompt = prompt + "\n\n" + footer_prompt
 
         # step4: Retrieve the Answer
