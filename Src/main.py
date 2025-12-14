@@ -4,7 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from Helper.config import get_settings
 from Stores.LLM.LLMProviderFactory import LLMProviderFactory
 from Stores.VectorDB.VectorDBProviderFactory import VectorDBProviderFactory
-
+from Stores.LLM import TempleteParser
 app = FastAPI()
 
 async def startup_span():
@@ -28,6 +28,12 @@ async def startup_span():
 
     app.vectordb_client=vectordb_provider_factory.create(provider=settings.VECTOR_DB_BACKEND)
     app.vectordb_client.connection()
+
+    
+    app.template_parser = TempleteParser(
+        language=settings.PRIMARY_LANG,
+        default_language=settings.DEFAULT_LANG,
+    )
 
 async def shutdown_span():
     app.mongo_conn.close()
