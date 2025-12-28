@@ -14,9 +14,21 @@ services:
     networks:
       - backend
     restart: always
-
-
+  pgvector:
+    image: pgvector/pgvector:0.8.1-pg18
+    container_name: pgvector
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/$USER/pgvector:/var/lib/postgresql/data
+    environment: 
+      - PG_VECTOR_PASSWORD=${PG_VECTOR_PASSWORD}
+    networks:
+      - backend
+    restart: always
 
 networks:
   backend:
     driver: bridge
+
+
