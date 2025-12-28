@@ -20,9 +20,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /home/$USER/pgvector:/var/lib/postgresql/data
+      - /home/$USER/pgvector:/var/lib/postgresql
     environment: 
-      - PG_VECTOR_PASSWORD=${PG_VECTOR_PASSWORD}
+      - POSTGRES_PASSWORD=${PG_VECTOR_PASSWORD}
     networks:
       - backend
     restart: always
