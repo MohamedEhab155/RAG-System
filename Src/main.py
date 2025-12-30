@@ -5,8 +5,11 @@ from Helper.config import get_settings
 from Stores.LLM.LLMProviderFactory import LLMProviderFactory
 from Stores.VectorDB.VectorDBProviderFactory import VectorDBProviderFactory
 from Stores.LLM import TempleteParser
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import (
+    create_async_engine,
+    AsyncSession,
+    async_sessionmaker    )
 app = FastAPI()
 
 async def startup_span():
@@ -15,11 +18,11 @@ async def startup_span():
     postgres_conn = f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DATABASE}"
 
     app.db_engine = create_async_engine(postgres_conn)
-    app.db_client = sessionmaker(
-        bind=app.db_engine,
-        class_=asyncio.Future,
-        expire_on_commit=False,
-    )
+    app.db_client = async_sessionmaker(
+    app.db_engine,
+    expire_on_commit=False,
+)
+
 
     # define factory 
     llm_provider_factory = LLMProviderFactory(settings)
