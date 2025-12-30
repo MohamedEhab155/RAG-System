@@ -11,7 +11,7 @@ logger=logging.getLogger("uvicorn_error")
 nlp_router=APIRouter(prefix="/app/v2/nlp")
 
 @nlp_router.post("/index/push/{project_id}")
-async def index_project (project_id:str , request: Request,PushRequest:PushRequest):
+async def index_project (project_id:int , request: Request,PushRequest:PushRequest):
     project_model=await ProjectModel.create_instance(request.app.db_client)
     project = await project_model.get_project_or_create_one(
     project_id=project_id ) 
@@ -39,7 +39,7 @@ async def index_project (project_id:str , request: Request,PushRequest:PushReque
     idx=0
     inserted_items_count=0
     while has_records :
-        page_chunks=await chunk_model.get_poject_chunks(project_id=project.id,page_no=page_no)   
+        page_chunks=await chunk_model.get_project_chunks(project_id=project.project_id,page_no=page_no)   
 
         if len(page_chunks):
             page_no += 1
@@ -71,7 +71,7 @@ async def index_project (project_id:str , request: Request,PushRequest:PushReque
 
 
 @nlp_router.get("/index/info/{project_id}")
-async def get_project_index_info(project_id:str , request: Request):
+async def get_project_index_info(project_id:int , request: Request):
     project_model=await ProjectModel.create_instance(request.app.db_client)
     project = await project_model.get_project_or_create_one(
     project_id=project_id ) 
@@ -99,7 +99,7 @@ async def get_project_index_info(project_id:str , request: Request):
     
 
 @nlp_router.post("/index/search/{project_id}")
-async def search_index(project_id:str , request: Request, search_request: SearchRequest):
+async def search_index(project_id:int , request: Request, search_request: SearchRequest):
     
     project_model = await ProjectModel.create_instance(
         db_client=request.app.db_client
@@ -139,7 +139,7 @@ async def search_index(project_id:str , request: Request, search_request: Search
 
 
 @nlp_router.post("/index/answer/{project_id}")
-async def answer_rag(request: Request, project_id: str, search_request: SearchRequest):
+async def answer_rag(request: Request, project_id: int, search_request: SearchRequest):
 
     project_model = await ProjectModel.create_instance(
         db_client=request.app.db_client

@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = None
     OPENAI_API_URL: str = None
     COHERE_API_KEY: str = None
+    NGROK_API_KEY: str = None
 
     GENERATION_MODEL_ID: str = None
     EMBEDDING_MODEL_ID: str = None
@@ -32,6 +33,7 @@ class Settings(BaseSettings):
     INPUT_DAFAULT_MAX_CHARACTERS: int = None
     GENERATION_DAFAULT_MAX_TOKENS: int = None
     GENERATION_DAFAULT_TEMPERATURE: float = None
+    NGROK_API_KEY: str = None
 
     VECTOR_DB_BACKEND : str
     VECTOR_DB_PATH : str
@@ -42,6 +44,7 @@ class Settings(BaseSettings):
     DEFAULT_LANG :str ="en"
     class Config:
         env_file = ".env"
+        extra = "forbid"
 
 def get_settings():
     return Settings()

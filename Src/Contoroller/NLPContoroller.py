@@ -1,6 +1,5 @@
 from .BaseContoroller import BaseContoroller 
-from Models.db_Schema.Project import Project 
-from Models.db_Schema.ChunkDtata import ChunkData
+from Models.db_Schema import Project,ChunkData
 from typing import List
 from Stores.LLM.LLMSEnums import DocumentTypeEnum
 import json
@@ -102,13 +101,6 @@ class NLPContoroller(BaseContoroller):
         
         system_prompt=self.TempleteParser.get(group="rag",key="system_prompt")
 
-
-      #  documents = "\n".join([
-       ##            "doc_num": idx + 1,
-           #         "chunk_text": doc["text"],
-         ##   })
-           # for idx, doc in enumerate(retrieved_documents)
-        #])
 
 
         prompt=query

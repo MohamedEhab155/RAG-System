@@ -2,7 +2,7 @@ from qdrant_client import QdrantClient, models
 import logging
 from Stores.VectorDB.VectorDBInterface import VectorDBInterface
 from ..VectorDBEnums import DistanceMethodEnums
-from Models.db_Schema.ChunkDtata import RetrievedDocument
+from Models.db_Schema import RetrievedDocument
 
 class QdrantProviders(VectorDBInterface):
     def __init__(self, distance_method, db_path):
