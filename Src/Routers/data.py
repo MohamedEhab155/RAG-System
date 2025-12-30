@@ -14,16 +14,16 @@ import logging
 logger=logging.getLogger("uvicorn_error")
 from Models.ProjectModel import ProjectModel
 from Models.ChunkModel import ChunkModel 
-from  Models.db_Schema.ChunkDtata import ChunkData
-from Models.db_Schema.Assets import  Asset
-from Models.AssetsModel import AssetModel
+from  Models.ChunkModel import ChunkData
+from Models.AssetsModel import  AssetModel
+from Models.ProjectModel import ProjectModel
 from Models.Enums.AssetsType import AssetsType
-
+from Models.db_Schema import Asset,ChunkData
 data_controller = DataContoroller()
 
 data_router = APIRouter(prefix="/app/v2/data")
 @data_router.post("/upload/{project_id}")
-async def upload_data(request: Request,project_id: str, file: UploadFile, app_setting: Settings = Depends(get_settings)):
+async def upload_data(request: Request,project_id: int, file: UploadFile, app_setting: Settings = Depends(get_settings)):
     data_controller = DataContoroller()
 
     project_model=await ProjectModel.create_instance(request.app.db_client)
@@ -68,7 +68,7 @@ async def upload_data(request: Request,project_id: str, file: UploadFile, app_se
     )
 
     asset_resource = Asset(
-        asset_project_id=project.id,
+        asset_project_id=project.project_id,
         asset_type=AssetsType.FILE.value,
         asset_name=file_id,
         asset_size=os.path.getsize(file_path)
@@ -79,12 +79,12 @@ async def upload_data(request: Request,project_id: str, file: UploadFile, app_se
     return JSONResponse(
             content={
                 "signal": ResponseSignal.FILE_UPLOAD_SUCCESS.value,
-                "file_id": str(asset_record.id),
+                "file_id": str(asset_record.asset_id),
             }
         )
 
 @data_router.post("/process/{project_id}")
-async def process(project_id,process_request:ProcessRequest,request:Request):
+async def process(project_id:int,process_request:ProcessRequest,request:Request):
      
     chunk_size=process_request.chunk_size
     overlap_size=process_request.overlap_size
@@ -98,7 +98,7 @@ async def process(project_id,process_request:ProcessRequest,request:Request):
     chunk_model=await ChunkModel.create_instance(request.app.db_client)
     if do_reset == 1:
             _ = await chunk_model.delete_chunks_by_project_id(
-                project_id=project.id
+                project_id=project.project_id
             )
 
     asset_model = await AssetModel.create_instance(
@@ -108,7 +108,7 @@ async def process(project_id,process_request:ProcessRequest,request:Request):
     project_files_ids = {}
     if process_request.file_id:
         asset_record = await asset_model.get_asset_record(
-            asset_project_id=project.id,
+            asset_project_id=project.project_id,
             asset_name=process_request.file_id
         )
 
@@ -121,15 +121,15 @@ async def process(project_id,process_request:ProcessRequest,request:Request):
             )
 
         project_files_ids = {
-            asset_record.id: asset_record.asset_name
+            asset_record.asset_id: asset_record.asset_name
         }
     
     else: 
-   
-        project_files=await asset_model.get_all_project_assets(project.id,AssetsType.FILE.value)
+
+        project_files=await asset_model.get_all_project_assets(project.project_id,AssetsType.FILE.value)
 
         project_files_ids={
-             record.id:record.asset_name
+             record.asset_id:record.asset_name
              for record in project_files
         }
 
@@ -159,7 +159,7 @@ async def process(project_id,process_request:ProcessRequest,request:Request):
                 chunk_text=chunk.page_content,
                 chunk_meta_data=chunk.metadata,
                 chunk_order=i+1,
-                chunk_project_id=project.id,
+                chunk_project_id=project.project_id,
                 chunk_asset_id=asset_id
             )
             for i, chunk in enumerate(file_chunks)

@@ -6,7 +6,7 @@ class ProjectContoroller(BaseContoroller):
 
     
     def get_project_path(self,project_id): 
-        project_dire = os.path.join(self.file_dirs , project_id)
+        project_dire = os.path.join(self.file_dirs , str(project_id))
 
         if not os.path.exists(project_dire):
             os.makedirs(project_dire)

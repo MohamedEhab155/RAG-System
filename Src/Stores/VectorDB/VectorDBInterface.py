@@ -1,5 +1,5 @@
 from abc import ABC , abstractmethod 
-from Models.db_Schema.ChunkDtata import RetrievedDocument
+from Models.db_Schema import RetrievedDocument
 from typing import List
 class VectorDBInterface(ABC): 
     
