@@ -2,7 +2,8 @@ from .BaseDataModel import BaseDataModel
 from .db_Schema import ChunkData 
 from bson import ObjectId
 from .Enums.DataBaseEnum import DataBaseEnum
-from sqlalchemy import select, delete
+from sqlalchemy import func, select, delete
+
 
 
 class ChunkModel(BaseDataModel): 
@@ -58,4 +59,13 @@ class ChunkModel(BaseDataModel):
             result = await session.execute(stmt)
             records = result.scalars().all()
         return records
+     
+     async def count_project_chunks(self, project_id: ObjectId):
+         count_record=0
+         async with self.db_client() as session:
+             async with session.begin():
+                    count_sql = select(func.count(ChunkData.chunk_id)).where(ChunkData.chunk_project_id == project_id)
+                    result= await session.execute(count_sql)
+                    count_record = result.scalar()
+         return count_record
 
