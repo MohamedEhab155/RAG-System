@@ -19,7 +19,12 @@ from Models.AssetsModel import  AssetModel
 from Models.ProjectModel import ProjectModel
 from Models.Enums.AssetsType import AssetsType
 from Models.db_Schema import Asset,ChunkData
+from Contoroller.NLPContoroller import NLPContoroller
+
+
 data_controller = DataContoroller()
+
+
 
 data_router = APIRouter(prefix="/app/v2/data")
 @data_router.post("/upload/{project_id}")
@@ -91,12 +96,18 @@ async def process(project_id:int,process_request:ProcessRequest,request:Request)
     file_id=process_request.file_id
     do_reset=process_request.do_reset
 
+    nlp_controller=NLPContoroller(request.app.generation_client,request.app.embedding_client,
+                                  request.app.vectordb_client,request.app.template_parser)
+
     project_model=await ProjectModel.create_instance(request.app.db_client)
     project = await project_model.get_project_or_create_one(
     project_id=project_id ) 
 
     chunk_model=await ChunkModel.create_instance(request.app.db_client)
     if do_reset == 1:
+            _ =await nlp_controller.vectordb_client.delete_collection(
+                collection_name= nlp_controller.create_collection_name(project_id=project.project_id)
+            )
             _ = await chunk_model.delete_chunks_by_project_id(
                 project_id=project.project_id
             )
@@ -165,8 +176,16 @@ async def process(project_id:int,process_request:ProcessRequest,request:Request)
             for i, chunk in enumerate(file_chunks)
         ]
 
-        
-        
+        if do_reset == 1:
+            # delete associated vectors collection
+            create_collection_name =  nlp_controller.create_collection_name(project_id=project.project_id)
+            _ = await request.app.vectordb_client.delete_collection(collection_name=create_collection_name)
+
+            # delete associated chunks
+            _ = await chunk_model.delete_chunks_by_project_id(
+                project_id=project.project_id
+            )
+            
 
         no_records += await chunk_model.insert_many_chunks(chunks=file_chunks_records)
         files_processing+=1
