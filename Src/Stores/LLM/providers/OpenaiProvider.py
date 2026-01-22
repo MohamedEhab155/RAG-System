@@ -2,6 +2,7 @@ from Stores.LLM.LLmsInterface import LLmsInterface
 from openai import OpenAI 
 import logging
 from ..LLMSEnums import LLMEnums
+from typing import List, Union
 class OpenaiProvider(LLmsInterface): 
 
     def __init__(self, api_key: str, api_url: str=None,
@@ -68,7 +69,7 @@ class OpenaiProvider(LLmsInterface):
  
         return completion.choices[0].message["content"]
   
-    def embed_text(self, text: str, document_type: str = None):
+    def embed_text(self, text:Union [List[str],str], document_type: str = None):
         if not self.client : 
             self.logger.error("OpenAI client was not set")
             return None 
@@ -84,8 +85,8 @@ class OpenaiProvider(LLmsInterface):
         if not response or not response.data or len(response.data) == 0 or not response.data[0].embedding:
             self.logger.error("Error while embedding text with OpenAI")
             return None
-
-        return response.data[0].embedding
+        return [embedding.embedding for embedding in response.data] 
+        
 
 
     def construct_prompt(self, prompt: str, role: str):
