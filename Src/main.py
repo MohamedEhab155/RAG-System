@@ -20,13 +20,14 @@ async def startup_span():
     app.db_engine = create_async_engine(postgres_conn)
     app.db_client = async_sessionmaker(
     app.db_engine,
+     class_=AsyncSession,
     expire_on_commit=False,
 )
 
 
     # define factory 
     llm_provider_factory = LLMProviderFactory(settings)
-    vectordb_provider_factory=VectorDBProviderFactory(settings)
+    vectordb_provider_factory=VectorDBProviderFactory(settings,db_client=app.db_client)
 
     
     app.generation_client = llm_provider_factory.create(provider=settings.GENERATION_BACKEND)
