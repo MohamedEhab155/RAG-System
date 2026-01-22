@@ -1,5 +1,6 @@
+from pickle import LIST
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from typing import List
 class Settings(BaseSettings):
 
     APP_NAME: str
@@ -18,7 +19,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT : int 
     POSTGRES_MAIN_DATABASE : str
 
-
+    GENERATION_BACKEND_LITERAL:LIST=None
     GENERATION_BACKEND: str
     EMBEDDING_BACKEND: str
 
@@ -35,9 +36,13 @@ class Settings(BaseSettings):
     GENERATION_DAFAULT_TEMPERATURE: float = None
     NGROK_API_KEY: str = None
 
+    VECTOR_DB_BACKEND_LITERAL:List=None
     VECTOR_DB_BACKEND : str
     VECTOR_DB_PATH : str
+    DEFAULT_VECTOR_SIZE : int = 100 
     VECTOR_DB_DISTANCE_METHOD: str = None
+    VECTOR_DB_THRESHOLD_INDEXING : int = 100
+
 
 
     PRIMARY_LANG  :str
