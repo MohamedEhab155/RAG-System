@@ -6,19 +6,19 @@ import os
 from fastapi import UploadFile , status , Request
 from fastapi.responses import JSONResponse 
 import aiofiles
-from Models import ResponseSignal
+from models import ResponseSignal
 from Helper.config import get_settings, Settings
 from Routers.Schema.data import ProcessRequest
 from Contoroller.ProcessContoroller import processContoroller
 import logging
 logger=logging.getLogger("uvicorn_error")
-from Models.ProjectModel import ProjectModel
-from Models.ChunkModel import ChunkModel 
-from  Models.ChunkModel import ChunkData
-from Models.AssetsModel import  AssetModel
-from Models.ProjectModel import ProjectModel
-from Models.Enums.AssetsType import AssetsType
-from Models.db_Schema import Asset,ChunkData
+from models.ProjectModel import ProjectModel
+from models.ChunkModel import ChunkModel 
+from  models.ChunkModel import ChunkData
+from models.AssetsModel import  AssetModel
+from models.ProjectModel import ProjectModel
+from models.Enums.AssetsType import AssetsType
+from models.db_Schema import Asset,ChunkData
 from Contoroller.NLPContoroller import NLPContoroller
 
 

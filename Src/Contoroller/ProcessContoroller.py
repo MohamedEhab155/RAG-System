@@ -3,7 +3,7 @@ from .BaseContoroller import BaseContoroller
 import os 
 from langchain_community.document_loaders import PyMuPDFLoader,TextLoader
 from .ProjectContoroller import ProjectContoroller 
-from Models import ProcessingEnum
+from models import ProcessingEnum
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List
 
