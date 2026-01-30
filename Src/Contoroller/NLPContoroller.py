@@ -1,5 +1,5 @@
 from .BaseContoroller import BaseContoroller 
-from Models.db_Schema import Project,ChunkData
+from models.db_Schema import Project,ChunkData
 from typing import List
 from Stores.LLM.LLMSEnums import DocumentTypeEnum
 import json

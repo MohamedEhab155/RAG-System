@@ -1,17 +1,18 @@
 import asyncio
 from fastapi import FastAPI
-from Routers import base, data,NLP
+from Routers import base, data, NLP
 from Helper.config import get_settings
 from Stores.LLM.LLMProviderFactory import LLMProviderFactory
 from Stores.VectorDB.VectorDBProviderFactory import VectorDBProviderFactory
 from Stores.LLM import TempleteParser
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.ext.asyncio import (
-    create_async_engine,
-    AsyncSession,
-    async_sessionmaker    )
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from utils.metrics import setup_metrics
+
 app = FastAPI()
 
+setup_metrics(app)
+
+@app.on_event("startup")
 async def startup_span():
     settings = get_settings()
     
@@ -19,42 +20,36 @@ async def startup_span():
 
     app.db_engine = create_async_engine(postgres_conn)
     app.db_client = async_sessionmaker(
-    app.db_engine,
-     class_=AsyncSession,
-    expire_on_commit=False,
-)
-
+        app.db_engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+    )
 
     # define factory 
     llm_provider_factory = LLMProviderFactory(settings)
-    vectordb_provider_factory=VectorDBProviderFactory(settings,db_client=app.db_client)
+    vectordb_provider_factory = VectorDBProviderFactory(settings, db_client=app.db_client)
 
-    
     app.generation_client = llm_provider_factory.create(provider=settings.GENERATION_BACKEND)
-    app.generation_client.set_generation_model(model_id = settings.GENERATION_MODEL_ID)
+    app.generation_client.set_generation_model(model_id=settings.GENERATION_MODEL_ID)
 
-   
     app.embedding_client = llm_provider_factory.create(provider=settings.EMBEDDING_BACKEND)
-    app.embedding_client.set_embedding_model(model_id=settings.EMBEDDING_MODEL_ID,
-                                             embedding_size=settings.EMBEDDING_MODEL_SIZE)
-    
+    app.embedding_client.set_embedding_model(
+        model_id=settings.EMBEDDING_MODEL_ID,
+        embedding_size=settings.EMBEDDING_MODEL_SIZE
+    )
 
-    app.vectordb_client=vectordb_provider_factory.create(provider=settings.VECTOR_DB_BACKEND)
+    app.vectordb_client = vectordb_provider_factory.create(provider=settings.VECTOR_DB_BACKEND)
     app.vectordb_client.connection()
 
-    
     app.template_parser = TempleteParser(
         language=settings.PRIMARY_LANG,
         default_language=settings.DEFAULT_LANG,
     )
 
+@app.on_event("shutdown")
 async def shutdown_span():
-    app.db_engine.dispose()
+    await app.db_engine.dispose()
     app.vectordb_client.disconnection()
-
-    
-app.on_event("startup")(startup_span)
-app.on_event("shutdown")(shutdown_span)
 
 app.include_router(base.base_router)
 app.include_router(data.data_router)
