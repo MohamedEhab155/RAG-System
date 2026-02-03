@@ -20,9 +20,8 @@ RUN uv pip install -r requirements.txt --system
 
 COPY Src/ .
 
-# Create directory structure for Alembic (matching the correct path)
-RUN mkdir -p /app/models/db_Schema/minirag/
 
+RUN mkdir -p /app/models/db_Schema/minirag/
 # Copy alembic.ini to the correct location
 COPY docker/rag_system/alembic.ini /app/models/db_Schema/minirag/alembic.ini
 
