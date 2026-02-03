@@ -1,0 +1,41 @@
+name: Deploy Main Branch to Server
+
+on:
+  push:
+    branches:
+      - ## any branch you need 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_MAIN_HOST_IP }}
+          username: github_user
+          key: ${{ secrets.SSH_MAIN_PRIVATE_KEY }}
+          script: |
+            cd /home/github_user/workspace/RAG-System/docker/rag_system
+            git checkout main
+            git pull origin main
+            sudo systemctl restart minrag.service
+            echo " Waiting for service..."
+            sleep 20
+            
+            for i in {1..6}; do
+              if nc -z localhost 80; then
+                echo " Port 80 active!"
+                exit 0
+              else
+                echo " Attempt $i/6"
+                sleep 5
+              fi
+            done
+            
+            echo " Deployment failed"
+            exit 1
