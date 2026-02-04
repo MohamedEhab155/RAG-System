@@ -20,22 +20,22 @@ jobs:
           username: github_user
           key: ${{ secrets.SSH_MAIN_PRIVATE_KEY }}
           script: |
-            cd /home/github_user/workspace/RAG-System/docker/rag_system
+            cd /home/github_user/workspace/RAG-System
             git checkout main
             git pull origin main
-            sudo systemctl restart minrag.service
-            echo " Waiting for service..."
+            sudo systemctl restart ragsystem.service
+            echo "⏳ Waiting for service to restart..."
             sleep 20
             
             for i in {1..6}; do
               if nc -z localhost 80; then
-                echo " Port 80 active!"
+                echo "✅ Port 80 is active! Deployment successful!"
                 exit 0
               else
-                echo " Attempt $i/6"
+                echo "⏳ Port 80 not ready, attempt $i/6"
                 sleep 5
               fi
             done
             
-            echo " Deployment failed"
+            echo "❌ Deployment failed: Port 80 did not become active"
             exit 1
