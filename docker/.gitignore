@@ -1,2 +1,4 @@
-mongodb
-.env
+env/.env*
+!env/.env.examble*
+env/app.env
+rag_system/alembic.ini*

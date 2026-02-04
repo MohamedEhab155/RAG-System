@@ -1,10 +1,10 @@
 from fastapi import APIRouter , Response,Request ,status
-from Models.ProjectModel import ProjectModel
-from Models.ChunkModel import ChunkModel
+from models.ProjectModel import ProjectModel
+from models.ChunkModel import ChunkModel
 import logging 
 from Contoroller import NLPContoroller
 from fastapi.responses import JSONResponse
-from Models.Enums import ResponseEnums
+from models.Enums import ResponseEnums
 from .Schema.nlp import PushRequest,SearchRequest
 from tqdm.auto import tqdm
 logger=logging.getLogger("uvicorn_error")
