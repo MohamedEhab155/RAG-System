@@ -46,7 +46,6 @@ class Settings(BaseSettings):
 
     MISTRAL_API_KEY: str
     MISTRAL_MODEL: str
-
     GEMENAI_API_KEY: str
     OCR_BACKEND: str 
 
