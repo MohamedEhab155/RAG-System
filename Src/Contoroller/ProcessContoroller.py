@@ -6,7 +6,7 @@ from .ProjectContoroller import ProjectContoroller
 from models import ProcessingEnum
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List
-
+from utils.PDFLoader import pdf_loader
 @dataclass
 class Document:
     page_content: str
@@ -35,8 +35,8 @@ class processContoroller (BaseContoroller):
         if file_ext ==ProcessingEnum.TXT.value :
              return TextLoader(file_path, encoding="utf-8")
         
-        if file_ext ==ProcessingEnum.TXT.value:
-            return PyMuPDFLoader(file_path=file_path,encoding="utf-8")
+        if file_ext ==ProcessingEnum.PDF.value:
+            return pdf_loader(file_path=file_path)
         
         return None 
     
