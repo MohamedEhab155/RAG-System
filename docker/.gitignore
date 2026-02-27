@@ -1,4 +1,3 @@
-env/.env*
-!env/.env.examble*
-env/app.env
-rag_system/alembic.ini*
+env/.env.postgres
+env/.env.grafana
+env/.env.postgres_exporter
