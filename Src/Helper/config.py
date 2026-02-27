@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT : int 
     POSTGRES_MAIN_DATABASE : str
 
-    GENERATION_BACKEND_LITERAL:LIST=None
+    GENERATION_BACKEND_LITERAL:List=None
     GENERATION_BACKEND: str
     EMBEDDING_BACKEND: str
 
@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     VECTOR_DB_DISTANCE_METHOD: str = None
     VECTOR_DB_THRESHOLD_INDEXING : int = 100
 
+
+    MISTRAL_API_KEY: str
+    MISTRAL_MODEL: str
+
+    GEMENAI_API_KEY: str
+    OCR_BACKEND: str 
 
 
     PRIMARY_LANG  :str
