@@ -1,6 +1,6 @@
 from typing import List
 import json
-from models.db_Schema.minirag.schemes.ChunkData import RetrievedDocument
+from models.db_Schema.rag.schemes.ChunkData import RetrievedDocument
 from ..VectorDBInterface import VectorDBInterface 
 from ..VectorDBEnums import (VectorDBEnums, PgVectorDistanceMethodEnums, 
                              PgVectorTableSchemeEnums,PgVectorIndexTypeEnums,DistanceMethodEnums)

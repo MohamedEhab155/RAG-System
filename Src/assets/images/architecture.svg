@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="900" height="620" font-family="Arial, sans-serif">
+
+  <!-- Background -->
+  <rect width="900" height="620" fill="#0f1117" rx="12"/>
+
+  <!-- Title -->
+  <text x="450" y="38" text-anchor="middle" font-size="18" font-weight="bold" fill="#ffffff">Resume RAG System — Architecture</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ROW 1: Client -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="370" y="58" width="160" height="44" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+  <text x="450" y="76" text-anchor="middle" font-size="12" font-weight="bold" fill="#a5b4fc">Client / Postman</text>
+  <text x="450" y="93" text-anchor="middle" font-size="10" fill="#94a3b8">HTTP Requests</text>
+
+  <!-- Arrow: Client → Nginx -->
+  <line x1="450" y1="102" x2="450" y2="126" stroke="#6366f1" stroke-width="2" marker-end="url(#arr-purple)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ROW 2: Nginx -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="350" y="126" width="200" height="44" rx="8" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+  <text x="450" y="144" text-anchor="middle" font-size="12" font-weight="bold" fill="#67e8f9">Nginx</text>
+  <text x="450" y="161" text-anchor="middle" font-size="10" fill="#94a3b8">Reverse Proxy · Port 80</text>
+
+  <!-- Arrow: Nginx → FastAPI -->
+  <line x1="450" y1="170" x2="450" y2="194" stroke="#06b6d4" stroke-width="2" marker-end="url(#arr-cyan)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ROW 3: FastAPI -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="280" y="194" width="340" height="60" rx="8" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+  <text x="450" y="216" text-anchor="middle" font-size="13" font-weight="bold" fill="#93c5fd">FastAPI Application</text>
+  <text x="330" y="236" text-anchor="middle" font-size="9" fill="#7dd3fc">/data/upload</text>
+  <text x="450" y="236" text-anchor="middle" font-size="9" fill="#7dd3fc">/data/process</text>
+  <text x="575" y="236" text-anchor="middle" font-size="9" fill="#7dd3fc">/nlp/index/answer</text>
+  <text x="450" y="248" text-anchor="middle" font-size="9" fill="#64748b">Port 8000 · Async · Prometheus Middleware</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ROW 4: Three stores -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <!-- Arrow FastAPI → OCR -->
+  <line x1="340" y1="254" x2="180" y2="318" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+  <!-- Arrow FastAPI → LLM -->
+  <line x1="450" y1="254" x2="450" y2="318" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+  <!-- Arrow FastAPI → VectorDB -->
+  <line x1="560" y1="254" x2="720" y2="318" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+
+  <!-- OCR Store -->
+  <rect x="60" y="318" width="200" height="72" rx="8" fill="#1a2e1a" stroke="#22c55e" stroke-width="2"/>
+  <text x="160" y="338" text-anchor="middle" font-size="12" font-weight="bold" fill="#86efac">OCR Store</text>
+  <rect x="75" y="346" width="78" height="28" rx="5" fill="#14532d" stroke="#16a34a" stroke-width="1"/>
+  <text x="114" y="362" text-anchor="middle" font-size="10" fill="#bbf7d0">Mistral OCR</text>
+  <rect x="163" y="346" width="82" height="28" rx="5" fill="#14532d" stroke="#16a34a" stroke-width="1"/>
+  <text x="204" y="362" text-anchor="middle" font-size="10" fill="#bbf7d0">Gemini Vision</text>
+  <text x="160" y="382" text-anchor="middle" font-size="9" fill="#64748b">PDF · Images · Scanned docs</text>
+
+  <!-- LLM Store -->
+  <rect x="340" y="318" width="220" height="72" rx="8" fill="#2d1b4e" stroke="#a855f7" stroke-width="2"/>
+  <text x="450" y="338" text-anchor="middle" font-size="12" font-weight="bold" fill="#d8b4fe">LLM Store</text>
+  <rect x="355" y="346" width="85" height="28" rx="5" fill="#3b0764" stroke="#9333ea" stroke-width="1"/>
+  <text x="397" y="362" text-anchor="middle" font-size="10" fill="#e9d5ff">OpenAI GPT</text>
+  <rect x="450" y="346" width="95" height="28" rx="5" fill="#3b0764" stroke="#9333ea" stroke-width="1"/>
+  <text x="497" y="362" text-anchor="middle" font-size="10" fill="#e9d5ff">Cohere</text>
+  <text x="450" y="382" text-anchor="middle" font-size="9" fill="#64748b">Generation · Embeddings · Bilingual</text>
+
+  <!-- VectorDB Store -->
+  <rect x="630" y="318" width="210" height="72" rx="8" fill="#2d1f0a" stroke="#f59e0b" stroke-width="2"/>
+  <text x="735" y="338" text-anchor="middle" font-size="12" font-weight="bold" fill="#fcd34d">VectorDB Store</text>
+  <rect x="645" y="346" width="78" height="28" rx="5" fill="#451a03" stroke="#d97706" stroke-width="1"/>
+  <text x="684" y="362" text-anchor="middle" font-size="10" fill="#fde68a">Qdrant</text>
+  <rect x="733" y="346" width="92" height="28" rx="5" fill="#451a03" stroke="#d97706" stroke-width="1"/>
+  <text x="779" y="362" text-anchor="middle" font-size="10" fill="#fde68a">PgVector</text>
+  <text x="735" y="382" text-anchor="middle" font-size="9" fill="#64748b">HNSW Index · Cosine / Dot</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ROW 5: PostgreSQL + Prometheus/Grafana -->
+  <!-- ═══════════════════════════════════════════════ -->
+
+  <!-- Arrow VectorDB → PostgreSQL -->
+  <line x1="735" y1="390" x2="735" y2="470" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-amber)"/>
+  <!-- Arrow FastAPI → PostgreSQL (metadata) -->
+  <line x1="450" y1="254" x2="290" y2="482" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arr-gray)"/>
+  <!-- Arrow FastAPI → Prometheus -->
+  <line x1="620" y1="224" x2="760" y2="224" stroke="#f97316" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-orange)"/>
+
+  <!-- PostgreSQL -->
+  <rect x="160" y="470" width="560" height="56" rx="8" fill="#1a1a2e" stroke="#ec4899" stroke-width="2"/>
+  <text x="340" y="493" text-anchor="middle" font-size="12" font-weight="bold" fill="#f9a8d4">PostgreSQL</text>
+  <text x="340" y="513" text-anchor="middle" font-size="9" fill="#94a3b8">projects · assets · chunk_data · Alembic migrations</text>
+  <text x="590" y="493" text-anchor="middle" font-size="12" font-weight="bold" fill="#f9a8d4">pgvector Extension</text>
+  <text x="590" y="513" text-anchor="middle" font-size="9" fill="#94a3b8">Vector columns · similarity search</text>
+  <line x1="450" y1="470" x2="450" y2="526" stroke="#ec4899" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Prometheus + Grafana -->
+  <rect x="760" y="194" width="120" height="72" rx="8" fill="#2a1a0a" stroke="#f97316" stroke-width="2"/>
+  <text x="820" y="214" text-anchor="middle" font-size="11" font-weight="bold" fill="#fb923c">Monitoring</text>
+  <text x="820" y="230" text-anchor="middle" font-size="9" fill="#fdba74">Prometheus</text>
+  <text x="820" y="244" text-anchor="middle" font-size="9" fill="#fdba74">Grafana</text>
+  <text x="820" y="258" text-anchor="middle" font-size="8" fill="#64748b">Metrics · Dashboards</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ROW 6: Azure CI/CD -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="280" y="548" width="340" height="44" rx="8" fill="#0f2744" stroke="#38bdf8" stroke-width="2"/>
+  <text x="450" y="567" text-anchor="middle" font-size="12" font-weight="bold" fill="#7dd3fc">Azure Cloud Deployment</text>
+  <text x="450" y="584" text-anchor="middle" font-size="9" fill="#94a3b8">GitHub Actions CI/CD · develop-deploy · main-deploy</text>
+
+  <!-- Arrow PostgreSQL → Azure -->
+  <line x1="450" y1="526" x2="450" y2="548" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#arr-sky)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- Legend -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="548" width="200" height="60" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="120" y="564" text-anchor="middle" font-size="10" font-weight="bold" fill="#94a3b8">Legend</text>
+  <line x1="32" y1="578" x2="60" y2="578" stroke="#6366f1" stroke-width="2"/>
+  <text x="66" y="582" font-size="9" fill="#94a3b8">HTTP / sync call</text>
+  <line x1="32" y1="594" x2="60" y2="594" stroke="#6366f1" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="66" y="598" font-size="9" fill="#94a3b8">Async / internal call</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- Arrow markers -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <defs>
+    <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#6366f1"/>
+    </marker>
+    <marker id="arr-cyan" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#06b6d4"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f97316"/>
+    </marker>
+    <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arr-sky" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+</svg>
