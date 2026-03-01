@@ -77,8 +77,9 @@ cd RAG-System
 cp Src/.env.example Src/.env
 # Edit Src/.env with your API keys (see Environment Variables below)
 ```
-
-### 2. Start Services with Docker
+### 2 Run Alembic Migration
+$ alembic upgrade head
+### 3. Start Services with Docker
 
 ```bash
 cd docker
@@ -98,7 +99,7 @@ Or start only core services (no monitoring):
 docker compose up -d fastapi nginx pgvector qdrant
 ```
 
-### 3. Run the API (Local Development)
+### 4. Run the API (Local Development)
 
 ```bash
 cd Src
@@ -272,4 +273,5 @@ alembic downgrade -1
 
 
 This project is licensed under the terms in the [LICENSE](./LICENSE) file.
+
 
