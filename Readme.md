@@ -180,10 +180,10 @@ PRIMARY_LANG=en                  # en or ar
 | `POST` | `/app/v2/nlp/index/search/{project_id}` | Semantic similarity search |
 | `POST` | `/app/v2/nlp/index/answer/{project_id}` | Full RAG answer generation |
 
-### RAG Demo:
+### RAG DEMO 
 
+```bash
 ```
-
 ![RAG Demo](assets/images/rag_demo.gif)
 
 ---
