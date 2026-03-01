@@ -8,14 +8,6 @@
 
 This system ingests PDF and text documents (resume, CV, portfolio) and exposes a conversational Q&A API. Recruiters or anyone interested can query it in **English or Arabic** and receive contextually accurate answers grounded in the source documents.
 
-**Core pipeline:**
-```
-PDF/TXT Upload → OCR + Text Extraction → Chunking → Embedding → Vector DB
-                                                                      ↓
-                                                   Query → Embed → Similarity Search → LLM → Answer
-```
-
----
 
 ##  Architecture
 
@@ -116,7 +108,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 5000
 
 API docs available at: **http://localhost:5000/docs**
 
-![Swagger UI](assets\images\swagger_ui.png)
+![Swagger UI](assets/images/swagger_ui.png)
 
 ---
 
@@ -280,3 +272,4 @@ alembic downgrade -1
 
 
 This project is licensed under the terms in the [LICENSE](./LICENSE) file.
+
