@@ -180,24 +180,8 @@ PRIMARY_LANG=en                  # en or ar
 | `POST` | `/app/v2/nlp/index/search/{project_id}` | Semantic similarity search |
 | `POST` | `/app/v2/nlp/index/answer/{project_id}` | Full RAG answer generation |
 
-### Example: Ask a question about the resume
+### RAG Demo:
 
-```bash
-curl -X POST http://localhost:5000/app/v2/nlp/index/answer/1 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "What programming languages does the candidate know?",
-    "limit": 5
-  }'
-```
-
-```json
-{
-  "signal": "RAG_ANSWER_SUCCESS",
-  "answer": "Based on the resume, the candidate is proficient in Python, with hands-on experience in...",
-  "full_prompt": "...",
-  "chat_history": null
-}
 ```
 
 ![RAG Demo](assets/images/rag_demo.gif)
