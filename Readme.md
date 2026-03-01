@@ -116,7 +116,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 5000
 
 API docs available at: **http://localhost:5000/docs**
 
-![Swagger UI](assets\images\swagger_ui..png)
+![Swagger UI](assets\images\swagger_ui.png)
 
 ---
 
