@@ -1,4 +1,4 @@
-# 🤖 Resume RAG System
+#  Resume RAG System
 
 > An intelligent, production-grade Retrieval-Augmented Generation (RAG) API that answers questions about my resume and CV — powered by multiple LLM providers, dual vector databases, OCR pipelines, and deployed on Azure with full observability.
 
